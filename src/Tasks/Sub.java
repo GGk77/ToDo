@@ -27,18 +27,4 @@ public class Sub extends Task {
                 '}';
     }
 
-
-//    @Override
-//    public String toString() {
-//        String result;
-//        result = "Имя сабтаска - " + getName() + "\n"
-//                + "ID сабтаска - " + getId() + "\n"
-//                + "Описание сабтаска - " + getDescription() + "\n"
-//                + "Статус сабтаска - " + getStatus() + "\n"
-//                + "EpicId" + getEpicId() + "\n"
-//                + "-------------";
-//
-//        return result;
-//    }
-
 }
