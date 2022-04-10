@@ -2,13 +2,14 @@ package Managers;
 
 import Tasks.Epic;
 import Tasks.Sub;
+import Tasks.Task;
 import Tasks.TaskStatus;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Manager manager = new Manager();
+        TaskManager manager = Managers.getDefault();
 
         Epic epic1 = new Epic("Epic1", "Сделать проект", TaskStatus.NEW);
         Epic epic2 = new Epic("Epic2", "Помыть машину", TaskStatus.NEW);
@@ -45,7 +46,7 @@ public class Main {
 
     }
 
-    public static void printAllTask(Manager manager) {
+    public static void printAllTask(TaskManager manager) {
 
         System.out.println("Epic");
         for (Epic epic : manager.getEpics()) {
@@ -54,6 +55,10 @@ public class Main {
         System.out.println("Sub");
         for (Sub sub : manager.getSubs()) {
             System.out.println(sub);
+        }
+        System.out.println("History");
+        for (Task task :manager.getHistory()) {
+            System.out.println(task);
         }
     }
 }
