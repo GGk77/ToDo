@@ -1,3 +1,10 @@
+package Managers;
+
+import Tasks.Epic;
+import Tasks.Sub;
+import Tasks.Task;
+import Tasks.TaskStatus;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -54,9 +61,6 @@ public class Manager {
     }
 
     public Long addSubTask(Sub sub) {
-        if (!epicTask.containsKey(sub.epicId)) {
-            System.out.println("Ошибка");
-        }
         Long id = idGenerate();
         sub.setId(id + 1);
         subTask.put(id, sub);
@@ -166,7 +170,7 @@ public class Manager {
 
     }
 
-    // Обновление статуса Epic
+    // Обновление статуса Tasks.Epic
 
     protected void updateEpicStatus(long epicId) {
         int statusNew = 0;
