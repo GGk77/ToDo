@@ -1,5 +1,6 @@
-public class Sub extends Task {
+package Tasks;
 
+public class Sub extends Task {
 
     protected Long epicId;
 
