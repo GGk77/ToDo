@@ -5,46 +5,58 @@ import Tasks.Sub;
 import Tasks.Task;
 import Tasks.TaskStatus;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
 
     long generateId = 0;
 
-    HashMap<Long, Task> singleTask = new HashMap<>();
-    HashMap<Long, Sub> subTask = new HashMap<>();
-    HashMap<Long, Epic> epicTask = new HashMap<>();
+    Map<Long, Task> singleTask = new HashMap<>();
+    Map<Long, Sub> subTask = new HashMap<>();
+    Map<Long, Epic> epicTask = new HashMap<>();
 
+    private final HistoryManager historyManager = Managers.getHistoryDefault();
 
     // Получаем список всех задач.
-    public ArrayList<Task> getTasks() {
+    @Override
+    public List<Task> getTasks() {
         return new ArrayList<Task>(singleTask.values());
     }
 
-    public ArrayList<Epic> getEpics() {
+    @Override
+    public List<Epic> getEpics() {
         return new ArrayList<Epic>(epicTask.values());
     }
 
-    public ArrayList<Sub> getSubs() {
+    @Override
+    public List<Sub> getSubs() {
         return new ArrayList<Sub>(subTask.values());
     }
 
+    @Override
     public Task getTask(long id) {
-        return singleTask.get(id);
+        Task task = singleTask.get(id);
+        historyManager.addTask(task);
+        return task;
     }
 
+    @Override
     public Epic getEpic(long id) {
-        return epicTask.get(id);
+        Epic epic = epicTask.get(id);
+        historyManager.addTask(epic);
+        return epic;
     }
 
+    @Override
     public Sub getSub(long id) {
-        return subTask.get(id);
+        Sub sub = subTask.get(id);
+        historyManager.addTask(sub);
+        return sub;
     }
 
     // Создание
 
+    @Override
     public Long addTask(Task task) {
         Long id = idGenerate();
         task.setId(id);
@@ -52,6 +64,7 @@ public class Manager {
         return id;
     }
 
+    @Override
     public Long addEpic(Epic epic) {
         Long id = idGenerate();
         epic.setId(id);
@@ -60,6 +73,7 @@ public class Manager {
         return id;
     }
 
+    @Override
     public Long addSubTask(Sub sub) {
         Long id = idGenerate();
         sub.setId(id + 1);
@@ -73,6 +87,7 @@ public class Manager {
 
     // Получение по ID
 
+    @Override
     public void getTaskById(long id) {
         if (singleTask.containsKey(id)) {
             Task ID = singleTask.get(id);
@@ -93,9 +108,10 @@ public class Manager {
 
     // Получение подзадач эпика
 
-    public ArrayList<Sub> getSubtaskEpic(long epicId) {
-        ArrayList<Long> subListId = epicTask.get(epicId).getSubTaskIds();
-        ArrayList<Sub> subList = new ArrayList<>();
+    @Override
+    public List<Sub> getSubtaskEpic(long epicId) {
+        List<Long> subListId = epicTask.get(epicId).getSubTaskIds();
+        List<Sub> subList = new ArrayList<>();
         for (long sub : subListId) {
             subList.add(subTask.get(sub));
 
@@ -105,6 +121,7 @@ public class Manager {
 
     // Обновление
 
+    @Override
     public void updateTask(Task task) {
         long id = task.getId();
         if (singleTask.containsKey(id)) {
@@ -112,6 +129,7 @@ public class Manager {
         }
     }
 
+    @Override
     public void updateEpic(Epic epic) {
         long id = epic.getId();
         if (epicTask.containsKey(id)) {
@@ -120,6 +138,7 @@ public class Manager {
 
     }
 
+    @Override
     public void updateSub(Sub sub) {
         Long epicId = sub.getEpicId();
         if (Objects.isNull(epicId)) {
@@ -137,12 +156,14 @@ public class Manager {
 
     // Генератор ID
 
+    @Override
     public Long idGenerate() {
         return ++generateId;
     }
 
     // Удаление
 
+    @Override
     public void removeAllTasks() {
         singleTask.clear();
         subTask.clear();
@@ -151,13 +172,15 @@ public class Manager {
         System.out.println("Ничего нет");
     }
 
+    @Override
     public void deleteTaskByIdSingle(long id) {
         singleTask.remove(id);
     }
 
+    @Override
     public void deleteTaskByIdEpic(long id) {
         if (epicTask.containsKey(id)) {
-            ArrayList<Long> idEpic = epicTask.get(id).getSubTaskIds();
+            List<Long> idEpic = epicTask.get(id).getSubTaskIds();
             for (Long subTaskId : idEpic) {
                 subTask.remove(subTaskId);
             }
@@ -165,17 +188,19 @@ public class Manager {
         }
     }
 
+    @Override
     public void deleteTaskByIdSubtask(long id) {
         subTask.remove(id);
 
     }
 
-    // Обновление статуса Tasks.Epic
+    // Обновление статуса Epic
 
-    protected void updateEpicStatus(long epicId) {
+    @Override
+    public void updateEpicStatus(long epicId) {
         int statusNew = 0;
         int statusDone = 0;
-        ArrayList<Long> list;
+        List<Long> list;
         list = epicTask.get(epicId).getSubTaskIds();
         if (list.size() == 0) {
             epicTask.get(epicId).setStatus(TaskStatus.NEW);
@@ -196,5 +221,10 @@ public class Manager {
                 epicTask.get(epicId).setStatus(TaskStatus.IN_PROGRESS);
             }
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 }
