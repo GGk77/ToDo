@@ -77,15 +77,4 @@ public class Task {
                 '}';
     }
 
-
-//    @Override
-//    public String toString() {
-//        String result;
-//        result = "Имя таска - " + getName() + "\n"
-//                + "ID таска - " + getId() + "\n"
-//                + "Описание таска - " + getDescription() + "\n"
-//                + "Статус таска - " + getStatus() + "\n"
-//                + "-------------";
-//        return result;
-//    }
 }
