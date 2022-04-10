@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class Manager {
 
-    Integer generateId = 0;
+    long generateId = 0;
 
-    HashMap<Integer, Task> singleTask = new HashMap<>();
-    HashMap<Integer, Sub> subTask = new HashMap<>();
-    HashMap<Integer, Epic> epicTask = new HashMap<>();
+    HashMap<Long, Task> singleTask = new HashMap<>();
+    HashMap<Long, Sub> subTask = new HashMap<>();
+    HashMap<Long, Epic> epicTask = new HashMap<>();
 
 
     // Получаем список всех задач.
@@ -24,43 +24,43 @@ public class Manager {
         return new ArrayList<Sub>(subTask.values());
     }
 
-    public Task getTask(Integer id) {
+    public Task getTask(long id) {
         return singleTask.get(id);
     }
 
-    public Epic getEpic(Integer id) {
+    public Epic getEpic(long id) {
         return epicTask.get(id);
     }
 
-    public Sub getSub(Integer id) {
+    public Sub getSub(long id) {
         return subTask.get(id);
     }
 
     // Создание
 
-    public Integer addTask(Task task) {
-        Integer id = idGenerate();
+    public Long addTask(Task task) {
+        Long id = idGenerate();
         task.setId(id);
         singleTask.put(id, task);
         return id;
     }
 
-    public Integer addEpic(Epic epic) {
-        Integer id = idGenerate();
+    public Long addEpic(Epic epic) {
+        Long id = idGenerate();
         epic.setId(id);
         epicTask.put(id, epic);
         updateEpicStatus(id);
         return id;
     }
 
-    public Integer addSubTask(Sub sub) {
+    public Long addSubTask(Sub sub) {
         if (!epicTask.containsKey(sub.epicId)) {
             System.out.println("Ошибка");
         }
-        Integer id = idGenerate();
+        Long id = idGenerate();
         sub.setId(id + 1);
         subTask.put(id, sub);
-        Integer epicId = sub.getEpicId();
+        Long epicId = sub.getEpicId();
         Epic epic = epicTask.get(epicId);
         epic.getSubTaskIds().add(id);
         return id;
@@ -69,7 +69,7 @@ public class Manager {
 
     // Получение по ID
 
-    public void getTaskById(Integer id) {
+    public void getTaskById(long id) {
         if (singleTask.containsKey(id)) {
             Task ID = singleTask.get(id);
             System.out.println(ID);
@@ -89,10 +89,10 @@ public class Manager {
 
     // Получение подзадач эпика
 
-    public ArrayList<Sub> getSubtaskEpic(Integer epicId) {
-        ArrayList<Integer> subListId = epicTask.get(epicId).getSubTaskIds();
+    public ArrayList<Sub> getSubtaskEpic(long epicId) {
+        ArrayList<Long> subListId = epicTask.get(epicId).getSubTaskIds();
         ArrayList<Sub> subList = new ArrayList<>();
-        for (Integer sub : subListId) {
+        for (long sub : subListId) {
             subList.add(subTask.get(sub));
 
         }
@@ -102,14 +102,14 @@ public class Manager {
     // Обновление
 
     public void updateTask(Task task) {
-        Integer id = task.getId();
+        long id = task.getId();
         if (singleTask.containsKey(id)) {
             singleTask.put(id, task);
         }
     }
 
     public void updateEpic(Epic epic) {
-        Integer id = epic.getId();
+        long id = epic.getId();
         if (epicTask.containsKey(id)) {
             epicTask.put(id, epic);
         }
@@ -117,14 +117,14 @@ public class Manager {
     }
 
     public void updateSub(Sub sub) {
-        Integer epicId = sub.getEpicId();
+        Long epicId = sub.getEpicId();
         if (Objects.isNull(epicId)) {
             return;
         }
         if (epicTask.containsKey(epicId)) {
             return;
         }
-        Integer id = sub.getId();
+        Long id = sub.getId();
         if (subTask.containsKey(id)) {
             subTask.put(id, sub);
         }
@@ -133,8 +133,8 @@ public class Manager {
 
     // Генератор ID
 
-    public Integer idGenerate() {
-        return ++generateId ;
+    public Long idGenerate() {
+        return ++generateId;
     }
 
     // Удаление
@@ -147,36 +147,36 @@ public class Manager {
         System.out.println("Ничего нет");
     }
 
-    public void deleteTaskByIdSingle(Integer id) {
+    public void deleteTaskByIdSingle(long id) {
         singleTask.remove(id);
     }
 
-    public void deleteTaskByIdEpic(Integer id) {
+    public void deleteTaskByIdEpic(long id) {
         if (epicTask.containsKey(id)) {
-            ArrayList<Integer> idEpic = epicTask.get(id).getSubTaskIds();
-            for (Integer subTaskId : idEpic) {
+            ArrayList<Long> idEpic = epicTask.get(id).getSubTaskIds();
+            for (Long subTaskId : idEpic) {
                 subTask.remove(subTaskId);
             }
             epicTask.remove(id);
         }
     }
 
-    public void deleteTaskByIdSubtask(Integer id) {
+    public void deleteTaskByIdSubtask(long id) {
         subTask.remove(id);
 
     }
 
     // Обновление статуса Epic
 
-    protected void updateEpicStatus(Integer epicId) {
+    protected void updateEpicStatus(long epicId) {
         int statusNew = 0;
         int statusDone = 0;
-        ArrayList<Integer> list;
+        ArrayList<Long> list;
         list = epicTask.get(epicId).getSubTaskIds();
         if (list.size() == 0) {
             epicTask.get(epicId).setStatus(TaskStatus.NEW);
         } else {
-            for (Integer value : list) {
+            for (Long value : list) {
                 TaskStatus status = subTask.get(value).getStatus();
                 if (status.equals(TaskStatus.NEW)) {
                     statusNew++;
