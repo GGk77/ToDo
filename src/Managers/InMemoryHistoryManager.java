@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class InMemoryHistoryManager  implements HistoryManager {
 
-    private final long lengthList = 10;
+    private final long LENGTH = 10;
 
     private final LinkedList<Task> history = new LinkedList<>();
 
@@ -24,7 +24,7 @@ public class InMemoryHistoryManager  implements HistoryManager {
             return;
         }
         history.add(task);
-        if (history.size() > lengthList) {
+        if (history.size() > LENGTH) {
             history.removeFirst();
         }
     }
