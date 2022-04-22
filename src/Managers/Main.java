@@ -19,31 +19,31 @@ public class Main {
 
         Sub subtask1 = new Sub("Subtask1", "Сделать чертеж", TaskStatus.NEW, epic1Id);
         Sub subtask2 = new Sub("Subtask2", "Распечатать", TaskStatus.NEW, epic1Id);
-        Sub subtask3 = new Sub("Subtask3", "Съездить на мойку", TaskStatus.NEW, epic2Id);
+        Sub subtask3 = new Sub("Subtask3", "Подписать", TaskStatus.NEW, epic1Id);
 
         Long sub1Id = manager.addSubTask(subtask1);
         Long sub2Id = manager.addSubTask(subtask2);
         Long sub3Id = manager.addSubTask(subtask3);
 
-        printAllTask(manager);
-
         Sub sub1 = manager.getSub(sub1Id);
-        sub1.setStatus(TaskStatus.IN_PROGRESS);
+        Epic epicOne = manager.getEpic(epic1Id);
         Sub sub2 = manager.getSub(sub2Id);
-        sub2.setStatus(TaskStatus.IN_PROGRESS);
+        Epic epicTwo = manager.getEpic(epic2Id);
         Sub sub3 = manager.getSub(sub3Id);
-        sub3.setStatus(TaskStatus.DONE);
-
-        manager.updateEpicStatus(1);
-        manager.updateEpicStatus(2);
+        Epic epicOneAgain = manager.getEpic(epic1Id);
+        Sub sub3Again = manager.getSub(sub3Id);
 
         printAllTask(manager);
+//        sub1.setStatus(TaskStatus.IN_PROGRESS);
+//        sub2.setStatus(TaskStatus.IN_PROGRESS);
+//        sub3.setStatus(TaskStatus.DONE);
+//        manager.updateEpicStatus(1);
+//        manager.updateEpicStatus(2);
 
-        manager.deleteTaskByIdEpic(2);
+        manager.deleteTaskByIdEpic(1);
         manager.deleteTaskByIdSubtask(4);
+
         printAllTask(manager);
-
-
     }
 
     public static void printAllTask(TaskManager manager) {
