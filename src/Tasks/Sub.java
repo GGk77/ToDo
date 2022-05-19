@@ -4,8 +4,8 @@ public class Sub extends Task {
 
     protected Long epicId;
 
-    public Sub(String name, String description, TaskStatus status, Long epicId) {
-        super(name, description, status);
+    public Sub(String name, String description, TaskStatus status, TaskType type, Long epicId) {
+        super(name, description, status,type);
         this.epicId = epicId;
     }
 

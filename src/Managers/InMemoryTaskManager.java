@@ -9,28 +9,28 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private long generateId = 0;
+    protected long generateId = 0;
 
-    private Map<Long, Task> singleTask = new HashMap<>();
-    private Map<Long, Sub> subTask = new HashMap<>();
-    private Map<Long, Epic> epicTask = new HashMap<>();
+    protected final Map<Long, Task> singleTask = new HashMap<>();
+    protected final Map<Long, Sub> subTask = new HashMap<>();
+    protected final Map<Long, Epic> epicTask = new HashMap<>();
 
-    private final HistoryManager historyManager = Managers.getHistoryDefault();
+    protected final HistoryManager historyManager = Managers.getHistoryDefault();
 
     // Получаем список всех задач.
     @Override
     public List<Task> getTasks() {
-        return new ArrayList<Task>(singleTask.values());
+        return new ArrayList<>(singleTask.values());
     }
 
     @Override
     public List<Epic> getEpics() {
-        return new ArrayList<Epic>(epicTask.values());
+        return new ArrayList<>(epicTask.values());
     }
 
     @Override
     public List<Sub> getSubs() {
-        return new ArrayList<Sub>(subTask.values());
+        return new ArrayList<>(subTask.values());
     }
 
     @Override
@@ -176,7 +176,6 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskByIdSingle(long id) {
         singleTask.remove(id);
         getHistory().remove(id);
-
     }
 
     @Override

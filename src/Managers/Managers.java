@@ -1,7 +1,18 @@
 package Managers;
 
-public class Managers {
-    public static TaskManager getDefault() {return new InMemoryTaskManager();}
+import java.io.File;
 
-    public static HistoryManager getHistoryDefault() {return new InMemoryHistoryManager();}
+public class Managers {
+
+    public static TaskManager getDefault() {
+        return new InMemoryTaskManager();
+    }
+
+    public static HistoryManager getHistoryDefault() {
+        return new InMemoryHistoryManager();
+    }
+
+    public static FileBackedTasksManager getFileBacked() {
+        return new FileBackedTasksManager(new File("taskPrint.csv"));
+    }
 }

@@ -7,13 +7,14 @@ public class Task {
     private String name;
     private String description;
     private TaskStatus status;
+    private TaskType type;
     private Long id;
 
-    public Task(String name, String description, TaskStatus status) {
+    public Task(String name, String description, TaskStatus status, TaskType type) {
         this.name = name;
         this.description = description;
         this.status = status;
-
+        this.type = type;
     }
 
     public String getName() {
@@ -38,6 +39,14 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
     }
 
     public Long getId() {
