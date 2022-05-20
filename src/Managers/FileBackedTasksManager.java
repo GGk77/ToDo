@@ -65,7 +65,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         for (Task task : manager.getHistory()) System.out.println(task);
     }
 
-    protected final HistoryManager historyManager = Managers.getHistoryDefault();
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -217,7 +216,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             }
             String ts = String.join("\n", ls);
             writer.append(ts);
-
+            writer.append("\n");
             var history = historyToString(getHistoryManager());
             writer.append("\n").append(history);
 
@@ -233,6 +232,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             reader.readLine(); // Пропускаем заголовок
             while (true) {
                 String line = reader.readLine();
+                if (line.isEmpty()) {
+                    break;
+                }
                 // Задачи
                 final Task task = fromString(line);
 
@@ -256,10 +258,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                         epicTask.put(id, (Epic) task);
                         break;
                 }
-                line = reader.readLine();
-                if (line.isEmpty()) {
-                    break;
-                }
             }
             String line = reader.readLine();
             if (line != null) {
@@ -267,8 +265,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
                 for (Integer id : histIds) {
                     System.out.println(id);
                 }
-            } else {
-                return;
             }
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка загрузки");
@@ -302,32 +298,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     //Создание задачи из строки
     private Task fromString(String value) {
         final String[] values = value.split(",");
-        // id,type,name,status,description,epic
-//        if ((values[0]).equals("")) {
-//            values[0] = 0;
-//        }
+        Task res = null;
         long taskId = Integer.parseInt(values[0]);
-        TaskType type = valueOf(values[1]);
+        var type = TaskType.valueOf(values[1]);
         String name = values[2];
         TaskStatus status = TaskStatus.valueOf(values[3]);
         String description = values[4];
         switch (type) {
             case TASK:
-                Task task = new Task(name, description, status, type);
-                task.setId(taskId);
-                return task;
+                res = new Task(name, description, status, type);
+                res.setId(taskId);
+                break;
             case SUBTASK:
                 Long epicId = Long.parseLong(values[5]);
-                Sub sub = new Sub(name, description, status, type, epicId);
-                sub.setId(taskId);
-                return sub;
+                res = new Sub(name, description, status, type, epicId);
+                res.setId(taskId);
+                break;
             case EPIC:
-                Epic epic = new Epic(name, description, status, type);
-                epic.setId(taskId);
-                return epic;
+                res = new Epic(name, description, status, type);
+                res.setId(taskId);
+                break;
             default:
                 throw new ManagerSaveException("Неверено введена задача");
         }
+        return res;
     }
 
     // Сохранение истории в строчку
