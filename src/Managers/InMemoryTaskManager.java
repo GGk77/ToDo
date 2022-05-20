@@ -76,7 +76,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Long addSubTask(Sub sub) {
         Long id = idGenerate();
-        sub.setId(id + 1);
+        sub.setId(id);
         subTask.put(id, sub);
         Long epicId = sub.getEpicId();
         Epic epic = epicTask.get(epicId);
@@ -120,7 +120,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Обновление
-
     @Override
     public void updateTask(Task task) {
         long id = task.getId();
@@ -155,14 +154,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Генератор ID
-
     @Override
     public Long idGenerate() {
         return ++generateId;
     }
 
     // Удаление
-
     @Override
     public void removeAllTasks() {
         singleTask.clear();
@@ -230,5 +227,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+
+
+    public HistoryManager getHistoryManager() {
+        return historyManager;
     }
 }
