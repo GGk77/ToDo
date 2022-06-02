@@ -1,21 +1,25 @@
 package Tasks;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Epic extends Task {
 
-    List<Long> subTaskIds = new ArrayList<>();
+    List<Sub> subTaskIds = new ArrayList<>();
+    public Epic(String name, String description, TaskStatus status, TaskType type, LocalDateTime start, long duration) {
+        super(name, description, status, type,start,duration);
+    }
 
-    public Epic(String name, String description, TaskStatus status,TaskType type) {
+    public Epic(String name, String description, TaskStatus status, TaskType type) {
         super(name, description, status, type);
     }
 
-    public List<Long> getSubTaskIds() {
+    public List<Sub> getSubTaskIds() {
         return subTaskIds;
     }
 
-    public void setSubTaskIds(List<Long> subTaskIds) {
+    public void setSubTaskIds(List<Sub> subTaskIds) {
         this.subTaskIds = subTaskIds;
     }
 
