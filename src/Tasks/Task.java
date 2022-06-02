@@ -21,6 +21,7 @@ public class Task {
         this.type = type;
         this.start = start;
         this.duration = duration;
+        this.end = getEnd();
     }
 
     public Task(String name, String description, TaskStatus status, TaskType type) {
@@ -117,6 +118,8 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status=" + status +
                 ", id=" + id +
+                ", startTime=" + start +
+                ", duration" + duration +
                 '}';
     }
 

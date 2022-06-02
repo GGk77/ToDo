@@ -7,6 +7,7 @@ import java.util.List;
 public class Epic extends Task {
 
     List<Sub> subTaskIds = new ArrayList<>();
+    private LocalDateTime epicEnd;
     public Epic(String name, String description, TaskStatus status, TaskType type, LocalDateTime start, long duration) {
         super(name, description, status, type,start,duration);
     }
@@ -23,6 +24,13 @@ public class Epic extends Task {
         this.subTaskIds = subTaskIds;
     }
 
+    public LocalDateTime getEpicEnd() {
+        return epicEnd;
+    }
+
+    public void setEpicEnd(LocalDateTime epicEnd) {
+        this.epicEnd = epicEnd;
+    }
     @Override
     public String toString() {
         return "Epic{" +
@@ -30,6 +38,8 @@ public class Epic extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
                 ", id=" + getId() +
+                ", startTime=" + getStart() +
+                ", duration" + getDuration() +
                 '}';
     }
 

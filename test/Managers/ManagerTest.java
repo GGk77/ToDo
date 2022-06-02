@@ -89,21 +89,21 @@ abstract class ManagerTest<T extends TaskManager> {
         List<Sub> subList = new ArrayList<>();
         subList.add(sub1_1);
         subList.add(sub1_2);
-        assertEquals(manager.getSubById(4), subList.get(1));
+        assertEquals(manager.getSub(4), subList.get(1));
     }
 
     @Test
     void getSingleById() {
         final Task tasks = manager.getTask(1);
         assertNotNull(tasks);
-        assertEquals(manager.getSingleById(1), tasks);
+        assertEquals(manager.getTask(1), tasks);
     }
 
     @Test
     void getEpicById() {
         final Epic epics = manager.getEpic(2);
         assertNotNull(epics);
-        assertEquals(manager.getEpicById(2), epics);
+        assertEquals(manager.getEpic(2), epics);
     }
 
     @Test
@@ -112,8 +112,8 @@ abstract class ManagerTest<T extends TaskManager> {
         final Sub sub2 = manager.getSub(4);
         assertNotNull(sub1);
         assertNotNull(sub2);
-        assertEquals(manager.getSubById(3), sub1);
-        assertEquals(manager.getSubById(4), sub2);
+        assertEquals(manager.getSub(3), sub1);
+        assertEquals(manager.getSub(4), sub2);
     }
 
     @Test

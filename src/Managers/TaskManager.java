@@ -16,6 +16,7 @@ public interface TaskManager {
 
     List<Sub> getSubs();
 
+    // Получение по ID
     Task getTask(long id);
 
     Epic getEpic(long id);
@@ -32,12 +33,6 @@ public interface TaskManager {
     //Получение подзадач эпика
     List<Sub> getSubsByEpic(Epic epic);
 
-    // Получение по ID
-    Task getSingleById(long id);
-
-    Epic getEpicById(long id);
-
-    Sub getSubById(long id);
 
     // Обновление
     void updateTask(Task task);

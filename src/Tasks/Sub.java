@@ -29,6 +29,8 @@ public class Sub extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
                 ", id=" + getId() +
+                ", startTime=" + getStart() +
+                ", duration" + getDuration() +
                 '}';
     }
 

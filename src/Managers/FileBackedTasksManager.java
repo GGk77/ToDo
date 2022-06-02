@@ -11,7 +11,7 @@ import java.util.Map;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-//    public static void main(String[] args) {
+    //    public static void main(String[] args) {
 ////        TaskManager manager = Managers.getDefault();
 //        TaskManager manager1 = Managers.getFileBacked();
 //        //Создание задач
@@ -134,21 +134,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     @Override
     public List<Sub> getSubsByEpic(Epic epic) {
         return super.getSubsByEpic(epic);
-    }
-
-    @Override
-    public Task getSingleById(long id) {
-        return super.getSingleById(id);
-    }
-
-    @Override
-    public Epic getEpicById(long id) {
-        return super.getEpicById(id);
-    }
-
-    @Override
-    public Sub getSubById(long id) {
-        return super.getSubById(id);
     }
 
     @Override
