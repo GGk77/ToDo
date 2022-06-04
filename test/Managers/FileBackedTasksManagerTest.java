@@ -2,14 +2,10 @@ package Managers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import Tasks.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.List;
-
 class FileBackedTasksManagerTest extends ManagerTest<FileBackedTasksManager> {
     HistoryManager historyManager;
     @BeforeEach
@@ -43,7 +39,7 @@ class FileBackedTasksManagerTest extends ManagerTest<FileBackedTasksManager> {
             BufferedReader reader = new BufferedReader(new FileReader("taskPrinter.csv"));
             assertEquals(head, reader.readLine());
             assertEquals("Task{name='Task1', description='Test1', status=NEW, id=1, startTime=2022-06-02T06:00, duration15}", reader.readLine());
-            assertEquals("Epic{name='Epic1', description='Test1', status=NEW, id=2, startTime=2022-06-01T15:00, duration30}", reader.readLine());
+            assertEquals("Epic{name='Epic1', description='Test1', status=NEW, id=2, startTime=2022-06-01T14:00, duration90}", reader.readLine());
             assertEquals("Sub{name='Sub1_1', description='test1', status=NEW, id=3, startTime=2022-06-01T14:00, duration30}", reader.readLine());
             assertEquals("Sub{name='Sub1_2', description='test1', status=NEW, id=4, startTime=2022-06-01T15:00, duration30}", reader.readLine());
             assertEquals("1,2,3,4",reader.readLine());

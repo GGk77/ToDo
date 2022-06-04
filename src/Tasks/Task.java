@@ -12,7 +12,6 @@ public class Task {
     private Long id;
     private LocalDateTime start;
     private long duration;
-    private LocalDateTime end;
 
     public Task(String name, String description, TaskStatus status, TaskType type, LocalDateTime start, long duration) {
         this.name = name;
@@ -21,7 +20,6 @@ public class Task {
         this.type = type;
         this.start = start;
         this.duration = duration;
-        this.end = getEnd();
     }
 
     public Task(String name, String description, TaskStatus status, TaskType type) {

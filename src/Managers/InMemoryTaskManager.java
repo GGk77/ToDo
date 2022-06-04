@@ -131,7 +131,6 @@ public class InMemoryTaskManager implements TaskManager {
         searchIntersectionInTime(epic);
         sortedPrioritization.put(epic.getStart(), epic);
         timeDurationEpic(epic);
-        epic.getEnd();
     }
 
     @Override
@@ -148,7 +147,6 @@ public class InMemoryTaskManager implements TaskManager {
         searchIntersectionInTime(sub);
         sortedPrioritization.put(sub.getStart(), sub);
         timeDurationEpic(epic);
-        sub.getEnd();
         updateEpicStatus(epic);
     }
 
@@ -229,16 +227,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     //Продолжительность эпика
     @Override
-      public void timeDurationEpic(Epic epic) {
-        LocalDateTime startEpic = LocalDateTime.MIN;
-        LocalDateTime endEpic;
+    public void timeDurationEpic(Epic epic) {
+        LocalDateTime localStart = LocalDateTime.MAX;
+        LocalDateTime localEnd = LocalDateTime.MIN;
         for (Sub sub : getSubsByEpic(epic)) {
-            if (sub.getStart().isAfter(startEpic))
-                startEpic = sub.getStart();
-            sub.setStart(startEpic);
-            epic.setStart(startEpic);
-            endEpic = sub.getStart().plusMinutes(sub.getDuration());
-            epic.setDuration(Duration.between(startEpic, endEpic).toMinutes());
+            if (localStart.isAfter(sub.getStart())) {
+                localStart = sub.getStart();
+            } else if (localEnd.isBefore(sub.getStart().plusMinutes(sub.getDuration()))) {
+                localEnd = sub.getStart().plusMinutes(sub.getDuration());
+            }
+            epic.setStart(localStart);
+            epic.setDuration(Duration.between(localStart, localEnd).toMinutes());
         }
     }
 
@@ -249,14 +248,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Поиск пересечений во времени
-        /* Ульяна, не стал писать вам в слаке, дабы не беспокоить вас лишний раз,
-    просто писал код в течении, примерно 10-ти часов без перерыва и голова уже совсем не соображала))
-    Сейчас конечно посмеиваюсь с ошибок некоторых)
-    Устранил недочёты все о которых вы писали, но к сожалению,
-    так и не смог найти решение по перебору списка сабтасков и поиску самого раннего времени начала и самого позднего по окончанию,
-    если подскажете какое-то решение которое я бы смог реализовать, то был бы рад)
-    Спасибо за ревью!
-             */
     @Override
     public void searchIntersectionInTime(Task task) {
         if (task.getStart() != null) {
