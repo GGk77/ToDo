@@ -44,6 +44,7 @@ public interface TaskManager {
     Long idGenerate();
 
     // Удаление
+    void deleteAll();
     void deleteTaskByIdSingle(long id);
 
     void deleteTaskByIdEpic(long id);

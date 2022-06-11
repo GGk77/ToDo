@@ -14,10 +14,11 @@ import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     protected long generateId = 0;
-    protected final Map<Long, Task> singleTask = new HashMap<>();
-    protected final Map<Long, Sub> subTask = new HashMap<>();
-    protected final Map<Long, Epic> epicTask = new HashMap<>();
-    protected static final HistoryManager historyManager = Managers.getHistoryDefault();
+    protected Map<Long, Task> singleTask = new HashMap<>();
+    protected Map<Long, Sub> subTask = new HashMap<>();
+    protected Map<Long, Epic> epicTask = new HashMap<>();
+    protected static HistoryManager historyManager = Managers.getHistoryDefault();
+
 
     protected Map<LocalDateTime, Task> sortedPrioritization = new TreeMap<>();
 
@@ -59,6 +60,13 @@ public class InMemoryTaskManager implements TaskManager {
             historyManager.add(epic);
         }
         return epic;
+    }
+
+    @Override
+    public void deleteAll() {
+        singleTask.clear();
+        epicTask.clear();
+        subTask.clear();
     }
 
     @Override

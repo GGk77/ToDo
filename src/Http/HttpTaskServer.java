@@ -5,13 +5,16 @@ import Managers.TaskManager.TaskManager;
 import Tasks.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ public class HttpTaskServer {
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         server.createContext("/tasks", this::getAllTasks);
-//        server.createContext("/tasks/task", this::getTask);
+        server.createContext("/tasks/task", this::getTask);
 //        server.createContext("/tasks/epic", this::getEpic);
 //        server.createContext("/tasks/sub", this::getSub);
 //        server.createContext("/tasks/history", this::getHistory);
@@ -78,105 +81,113 @@ public class HttpTaskServer {
         }
     }
 
-//    private static void getTask(HttpExchange exchange) {
-//        try (OutputStream outputStream = exchange.getResponseBody()) {
-//            exchange.getResponseHeaders().set("Content-Type", "application/json");
-//            String response = " ";
-//
-//            String method = exchange.getRequestMethod();
-//            System.out.println("Обработка " + method + " запроса");
-//            String path = exchange.getRequestURI().getPath();
-//            System.out.println("Обработка " + path);
-//            URI requestURI = exchange.getRequestURI();
-//            System.out.println("Началась обработка " + requestURI);
-//            String query = requestURI.getQuery();
-//            switch (method) {
-//                case "GET":
-//                    if (!query.isEmpty()) {
-//                        try {
-//                            Task task = manager.getTask(Long.parseLong(map.get("id")));
-//                            if (Objects.nonNull(task)) {
-//                                response = gson.toJson(task);
-//                                exchange.sendResponseHeaders(200, 0);
-//                            } else {
-//                                response = gson.toJson("Нет задачи");
-//                                exchange.sendResponseHeaders(404, 0);
-//                            }
-//                        } catch (Exception e) {
-//                            response = gson.toJson("Нет задачи с данным ID" + e.getMessage());
-//                            exchange.sendResponseHeaders(400, 0);
-//                        }
-//                    } else {
-//                        response = gson.toJson(manager.getTasks());
-//                        exchange.sendResponseHeaders(400, 0);
-//                    }
-//                case "POST":
-//                    String strJson = new String(exchange.getRequestBody().readAllBytes(), Charset.defaultCharset());
-//                    if (!map.isEmpty()) {
-//                        // update
-//                        try {
-//                            Task task = gson.fromJson(strJson, new TypeToken<Task>() {
-//                            }.getType());
-//                            task.setId(Long.parseLong(map.get("id")));
-//                            response = gson.toJson(task);
-//                            exchange.sendResponseHeaders(200, 0);
-//                        } catch (Exception e) {
-//                            response = gson.toJson("обновление задачи не работает" + e.getMessage());
-//                            exchange.sendResponseHeaders(400, 0);
-//                        }
-//                    } else {
-//                        //add
-//                        try {
-//                            Task task = gson.fromJson(strJson, new TypeToken<Task>() {
-//                            }.getType());
-//                            manager.addTask(task);
-//                            if (task != null) {
-//                                response = gson.toJson(task);
-//                                exchange.sendResponseHeaders(201, 0);
-//                            } else {
-//                                response = gson.toJson("add ERROR");
-//                                exchange.sendResponseHeaders(404, 0);
-//                            }
-//                        } catch (Exception e) {
-//                            response = gson.toJson("создание задачи не работает" + e.getMessage());
-//                            exchange.sendResponseHeaders(400, 0);
-//                        }
-//                    }
-//                case "DELETE":
-//                    if (!map.isEmpty()) {
-//                        try {
-//                            Task task = manager.getTask(Long.parseLong(map.get("id")));
-//                            if (task != null) {
-//                                manager.deleteTaskByIdSingle(task.getId());
-//                                response = gson.toJson("Удалено");
-//                                exchange.sendResponseHeaders(200, 0);
-//                            } else {
-//                                response = gson.toJson("delete ERROR");
-//                                exchange.sendResponseHeaders(404, 0);
-//                            }
-//                        } catch (Exception e) {
-//                            response = gson.toJson("удаление задачи не работает" + e.getMessage());
-//                            exchange.sendResponseHeaders(400, 0);
-//                        }
-//                    }
-//                default:
-//                    response = gson.toJson("Запрос не работает");
-//                    exchange.sendResponseHeaders(400, 0);
-//            }
-//            outputStream.write(response.getBytes());
-//        } catch (IOException e) {
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    private static String getPathQuery(HttpExchange exchange) {
-//        Map<String, String> map = new HashMap<>();
-//        map.put(exchange.getRequestURI().getPath(), exchange.getRequestURI().getQuery());
-//        String returned = map.get(exchange.getRequestURI().getQuery());
-//        return returned;
-//        // todo скорее всего не работает как надо
-//    }
+    private void getTask(HttpExchange exchange) {
+        try (OutputStream outputStream = exchange.getResponseBody()) {
+            exchange.getResponseHeaders().set("Content-Type", "application/json");
+            String response = " ";
 
+            String method = exchange.getRequestMethod();
+            System.out.println("Обработка " + method + " запроса");
+
+            String path = exchange.getRequestURI().getPath();
+            System.out.println("Обработка " + path);
+
+            URI requestURI = exchange.getRequestURI();
+            System.out.println("Началась обработка " + requestURI);
+
+            String query = requestURI.getQuery();
+            switch (method) {
+                case "GET":
+                    //getById
+                    if (requestURI.getQuery() != null) {
+                        long id = Long.parseLong(exchange.getRequestURI().getQuery().split("=")[1]);
+                        if (path.endsWith("tasks/task/")) {
+                            Task task = manager.getTask(id);
+                            try {
+                                if (Objects.nonNull(task)) {
+                                    response = gson.toJson(task);
+                                    sendText(exchange, response);
+                                    break;
+                                } else {
+                                    response = gson.toJson("Нет задачи");
+                                    exchange.sendResponseHeaders(404, 0);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } else {
+                        ArrayList<Task> list = new ArrayList<>();
+                        list.addAll(manager.getTasks());
+                        response = gson.toJson(list);
+                        sendText(exchange, response);
+                    }
+                    break;
+                case "POST":
+                    // update
+                    long id = Long.parseLong(exchange.getRequestURI().getQuery().split("=")[1]);
+                    InputStream inputStream = exchange.getRequestBody();
+                    String body = new String(inputStream.readAllBytes(), Charset.defaultCharset());
+                    if (path.endsWith("tasks/task/")) {
+                        try {
+                            Task task = gson.fromJson(body, new TypeToken<Task>() {
+                            }.getType());
+                            if (manager.getTask(task.getId()) != null) {
+                                manager.updateTask(task);
+                                response = gson.toJson(task);
+                                sendText(exchange, response);
+                            } else {
+                                //add
+                                manager.addTask(task);
+                                if (task != null) {
+                                    response = gson.toJson(task);
+                                    exchange.sendResponseHeaders(201, 0);
+                                } else {
+                                    response = gson.toJson("add ERROR");
+                                    exchange.sendResponseHeaders(404, 0);
+                                }
+                            }
+                        } catch (Exception e) {
+                            response = gson.toJson("создание задачи не работает" + e.getMessage());
+                            e.printStackTrace();
+                            exchange.sendResponseHeaders(400, 0);
+                        }
+                    }
+                    break;
+                case "DELETE":
+                    if (query == null) {
+                        manager.deleteAll();
+                        response = gson.toJson("Удалено");
+                        sendText(exchange, response);
+                        break;
+                    } else {
+                        try {
+                            long idTask = Long.parseLong(query.substring(3));
+                            Task task = manager.getTask(idTask);
+                            if (task != null) {
+                                manager.deleteTaskByIdSingle(task.getId());
+                                response = gson.toJson("Удалено");
+                                sendText(exchange, response);
+                            } else {
+                                response = gson.toJson("Не удалено");
+                                exchange.sendResponseHeaders(404, 0);
+                            }
+                        } catch (Exception e) {
+                            response = gson.toJson("удаление задачи не работает" + e.getMessage());
+                            e.printStackTrace();
+                            exchange.sendResponseHeaders(400, 0);
+                        }
+                    }
+                    break;
+                default:
+                    outputStream.write(response.getBytes());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            exchange.close();
+        }
+    }
 
 //    private static void getEpic(HttpExchange exchange) {
 //        try (OutputStream outputStream = exchange.getResponseBody()) {

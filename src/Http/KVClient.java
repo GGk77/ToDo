@@ -1,5 +1,7 @@
 package Http;
 
+import Exceptions.ManagerSaveException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -38,7 +40,7 @@ public class KVClient {
             HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.ofString(json);
             HttpRequest request = HttpRequest.newBuilder()
                     .POST(body)
-                    .uri(URI.create("http://localhost:8078/save/"
+                    .uri(URI.create(url + "/save"
                             + key + "?API_TOKEN- " + token))
                     .build();
             HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
@@ -55,7 +57,7 @@ public class KVClient {
             client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
-                    .uri(URI.create("http://localhost:8078/load/"
+                    .uri(URI.create(url + "/load"
                     + key + "?API_TOKEN- " + token))
                     .build();
             HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
@@ -64,6 +66,7 @@ public class KVClient {
             System.out.println(response);
         } catch (IOException | InterruptedException e) {
             System.out.println("Ошибка в методе load - KVClient");
+            throw new ManagerSaveException("не загрузилось");
         }
         return loader;
     }
