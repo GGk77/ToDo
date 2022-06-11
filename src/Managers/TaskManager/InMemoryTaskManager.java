@@ -1,5 +1,8 @@
-package Managers;
+package Managers.TaskManager;
 
+import Exceptions.TimeErrorException;
+import Managers.History.HistoryManager;
+import Managers.Managers;
 import Tasks.Epic;
 import Tasks.Sub;
 import Tasks.Task;
@@ -113,7 +116,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         long id = task.getId();
-
         if (singleTask.containsKey(id)) {
             singleTask.put(id, task);
         }
@@ -157,7 +159,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Удаление
-    // Удаление
     @Override
     public void deleteTaskByIdSingle(long id) {
         Task task = getTask(id);
@@ -165,7 +166,6 @@ public class InMemoryTaskManager implements TaskManager {
             sortedPrioritization.remove(task.getStart());
         singleTask.remove(id);
         historyManager.remove(id);
-
     }
 
     @Override
@@ -195,7 +195,6 @@ public class InMemoryTaskManager implements TaskManager {
             timeDurationEpic(epic);
             updateEpicStatus(epic);
         }
-
     }
 
     // Обновление статуса Epic
@@ -233,10 +232,12 @@ public class InMemoryTaskManager implements TaskManager {
         for (Sub sub : getSubsByEpic(epic)) {
             if (localStart.isAfter(sub.getStart())) {
                 localStart = sub.getStart();
-            } else if (localEnd.isBefore(sub.getStart().plusMinutes(sub.getDuration()))) {
+            }
+            if (localEnd.isBefore(sub.getStart().plusMinutes(sub.getDuration()))) {
                 localEnd = sub.getStart().plusMinutes(sub.getDuration());
             }
             epic.setStart(localStart);
+            epic.setEpicEnd(localEnd);
             epic.setDuration(Duration.between(localStart, localEnd).toMinutes());
         }
     }

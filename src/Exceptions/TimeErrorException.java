@@ -1,4 +1,4 @@
-package Managers;
+package Exceptions;
 
 public class TimeErrorException extends RuntimeException {
 

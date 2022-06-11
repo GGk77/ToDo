@@ -2,6 +2,8 @@ package Managers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import Managers.FileBacked.FileBackedTasksManager;
+import Managers.History.HistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

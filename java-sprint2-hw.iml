@@ -9,5 +9,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" scope="TEST" name="junit" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.9.0" level="project" />
   </component>
 </module>

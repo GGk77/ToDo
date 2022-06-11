@@ -1,10 +1,9 @@
-package Managers;
+package Managers.TaskManager;
 
 import Tasks.Epic;
 import Tasks.Sub;
 import Tasks.Task;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskManager {

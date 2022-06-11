@@ -1,4 +1,4 @@
-package Managers;
+package Managers.History;
 
 import Tasks.Task;
 
