@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
 public class KVClient {
     public HttpClient client;
     private String token;
-    private String url;
+    private final String url;
 
     public KVClient(int port) {
         this.client = HttpClient.newHttpClient();
@@ -44,12 +44,13 @@ public class KVClient {
                             + key + "?API_TOKEN- " + token))
                     .build();
             HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-            HttpResponse<String> response = client.send(request,handler);
+            HttpResponse<String> response = client.send(request, handler);
             System.out.println(response);
         } catch (IOException | InterruptedException e) {
             System.out.println("Ошибка в методе put - KVClient");
         }
     }
+
     // возвращает гет /load/<key>?API_TOKEN
     public String load(String key) {
         String loader = null;
@@ -58,15 +59,14 @@ public class KVClient {
             HttpRequest request = HttpRequest.newBuilder()
                     .GET()
                     .uri(URI.create(url + "/load"
-                    + key + "?API_TOKEN- " + token))
+                            + key + "?API_TOKEN- " + token))
                     .build();
             HttpResponse.BodyHandler<String> handler = HttpResponse.BodyHandlers.ofString();
-            HttpResponse<String> response = client.send(request,handler);
+            HttpResponse<String> response = client.send(request, handler);
             loader = response.body();
             System.out.println(response);
         } catch (IOException | InterruptedException e) {
-            System.out.println("Ошибка в методе load - KVClient");
-            throw new ManagerSaveException("не загрузилось");
+            throw new ManagerSaveException("Ошибка в методе load - KVClient");
         }
         return loader;
     }

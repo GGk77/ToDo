@@ -1,4 +1,5 @@
 package Http;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.IOException;
@@ -12,7 +13,7 @@ import com.sun.net.httpserver.HttpServer;
 /**
  * Постман: https://www.getpostman.com/collections/a83b61d9e1c81c10575c
  */
-public class KVServer  {
+public class KVServer {
     public static final int PORT = 8078;
     private final String apiToken;
     private final HttpServer server;
@@ -109,6 +110,11 @@ public class KVServer  {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+
+    public void stop() {
+        System.out.println("Закрываем сервер на порту: " + PORT);
+        server.stop(0);
     }
 
     private String generateApiToken() {

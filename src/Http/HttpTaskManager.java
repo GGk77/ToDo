@@ -7,7 +7,6 @@ import Tasks.Sub;
 import Tasks.Task;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -25,19 +24,19 @@ public class HttpTaskManager extends FileBackedTasksManager {
 
     protected void load() {
         try {
-            String taskJson = kvClient.load("tasks");
+            String taskJson = kvClient.load("tasks/task/");
             singleTask = gson.fromJson(taskJson, new TypeToken<HashMap<Integer, Task>>() {
             }.getType());
 
-            String epicJson = kvClient.load("epics");
+            String epicJson = kvClient.load("tasks/epic/");
             epicTask = gson.fromJson(epicJson, new TypeToken<HashMap<Integer, Epic>>() {
             }.getType());
-            String subJson = kvClient.load("subs");
+            String subJson = kvClient.load("tasks/sub/");
 
             subTask = gson.fromJson(subJson, new TypeToken<HashMap<Integer, Sub>>() {
             }.getType());
 
-            String historyJson = kvClient.load("history");
+            String historyJson = kvClient.load("tasks/history/");
             historyManager = gson.fromJson(historyJson, new TypeToken<List<Integer>>() {
             }.getType());
         } catch (Exception e) {
