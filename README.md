@@ -30,7 +30,7 @@
 Это достигается реализацией двусвязанного списка и HashMap.
 
 Доступ к методам осуществляется с помощью HTTP-запросов и хранит свое состояние на отдельном сервере.
-
+Также в программе реализованы UNIT-тесты на проверку логики работы методов и классов.
 Программа написана на Java. Пример кода:
 
 ```java
@@ -40,7 +40,6 @@ public class InMemoryTaskManager implements TaskManager {
     protected Map<Long, Sub> subTask = new HashMap<>();
     protected Map<Long, Epic> epicTask = new HashMap<>();
     protected static HistoryManager historyManager = Managers.getHistoryDefault();
-
 
     protected Map<LocalDateTime, Task> sortedPrioritization = new TreeMap<>();
 
@@ -54,7 +53,6 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getTasks() {
         return new ArrayList<>(singleTask.values());
     }
-
     @Override
     public List<Epic> getEpics() {
         return new ArrayList<>(epicTask.values());
