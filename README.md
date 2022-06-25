@@ -53,6 +53,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getTasks() {
         return new ArrayList<>(singleTask.values());
     }
+
     @Override
     public List<Epic> getEpics() {
         return new ArrayList<>(epicTask.values());
@@ -93,6 +94,16 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setStatus(TaskStatus.IN_PROGRESS);
             }
         }
+    }
+    
+    @Test
+    void getHistoryTest() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/tasks/history");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        assertEquals(200, response.statusCode());
     }
 }
 ```
